@@ -209,9 +209,9 @@ awful.screen.connect_for_each_screen(function(s)
 	set_wallpaper(s)
 
 	-- Each screen has its own tag table.
-	local names = { "main", "www", "floating", "other", "   " }
+	local names = { "main", "www", "floating", "other" }
 	local l = awful.layout.suit -- Just to save some typing: use an alias.
-	local layouts = { l.tile, l.tile, l.floating, l.tile, l.tile }
+	local layouts = { l.tile, l.tile, l.floating, l.tile }
 	awful.tag(names, s, layouts)
 	-- awful.tag({ "Main", "floating", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[2])
 
@@ -238,42 +238,43 @@ awful.screen.connect_for_each_screen(function(s)
 	s.mytaglist = awful.widget.taglist({
 		screen = s,
 		filter = awful.widget.taglist.filter.all,
-		style = {
-			shape = gears.shape.powerline,
-		},
 		layout = {
-			spacing = -12,
-			-- spacing_widget = {
-			-- 	color = "#dddddd",
-			-- 	shape = gears.shape.powerline,
-			-- 	widget = wibox.widget.separator,
-			-- },
+			spacing = 15,
+			spacing_widget = {
+				{
+					{
+						text = "|",
+						widget = wibox.widget.textbox,
+					},
+					layout = wibox.container.place,
+				},
+				fg = "#b7bdf8",
+				layout = wibox.container.background,
+			},
 			layout = wibox.layout.fixed.horizontal,
 		},
 		widget_template = {
 			{
 				{
 					{
-						{
-							id = "text_role",
-							widget = wibox.widget.textbox,
-						},
-						layout = wibox.layout.fixed.horizontal,
+						id = "text_role",
+						widget = wibox.widget.textbox,
 					},
-					left = 20,
-					right = 5,
-					widget = wibox.container.margin,
+					{
+						{
+							top = 2,
+							widget = wibox.container.margin,
+						},
+						id = "background_role",
+						widget = wibox.container.background,
+					},
+					layout = wibox.layout.fixed.vertical,
 				},
-				{
-					color = "#24273a",
-					shape = gears.shape.powerline,
-					forced_width = 16,
-					widget = wibox.widget.separator,
-				},
-				layout = wibox.layout.fixed.horizontal,
+				-- left = 5,
+				-- right = 5,
+				widget = wibox.container.margin,
 			},
-			id = "background_role",
-			widget = wibox.container.background,
+			layout = wibox.layout.fixed.horizontal,
 		},
 		buttons = taglist_buttons,
 	})
@@ -283,23 +284,8 @@ awful.screen.connect_for_each_screen(function(s)
 		screen = s,
 		filter = awful.widget.tasklist.filter.currenttags,
 		buttons = tasklist_buttons,
-		style = {
-			shape_border_width = 1,
-			shape_border_color = "#777777",
-			shape = gears.shape.powerline,
-		},
 		layout = {
-			spacing = -5,
-			-- spacing_widget = {
-			-- 	{
-			-- 		forced_width = 5,
-			-- 		shape = gears.shape.circle,
-			-- 		widget = wibox.widget.separator,
-			-- 	},
-			-- 	valign = "center",
-			-- 	halign = "center",
-			-- 	widget = wibox.container.place,
-			-- },
+			spacing = 5,
 			layout = wibox.layout.flex.horizontal,
 		},
 		-- Notice that there is *NO* wibox.wibox prefix, it is a template,
@@ -311,36 +297,53 @@ awful.screen.connect_for_each_screen(function(s)
 						{
 							{
 								id = "icon_role",
-								-- forced_height = 20,
+								forced_height = 16,
 								widget = wibox.widget.imagebox,
 							},
-							margins = 2,
+							layout = wibox.container.place,
+						},
+						top = 2,
+						bottom = 2,
+						layout = wibox.container.margin,
+					},
+					{
+						{
+							top = 2,
 							widget = wibox.container.margin,
 						},
-						{
-							id = "text_role",
-							widget = wibox.widget.textbox,
-						},
-						{
-							text = " ",
-							widget = wibox.widget.textbox,
-						},
-						spacing = 2,
-						layout = wibox.layout.fixed.horizontal,
+						id = "background_role",
+						widget = wibox.container.background,
 					},
-					left = 10,
-					right = 10,
-					layout = wibox.container.margin,
+					spacing = 2,
+					layout = wibox.layout.align.vertical,
 				},
-				left = 10,
-				right = 10,
+				-- left = 5,
+				-- right = 5,
 				widget = wibox.container.margin,
 			},
-			id = "background_role",
-			widget = wibox.container.background,
+			layout = wibox.layout.fixed.horizontal,
 		},
 	})
 
+	--title only
+	local mytagtitle = awful.widget.tasklist({
+		screen = s,
+		filter = awful.widget.tasklist.filter.focused,
+		buttons = tasklist_buttons,
+		layout = {
+			spacing = 0,
+			layout = wibox.layout.flex.horizontal,
+		},
+		widget_template = {
+			{
+				id = "text_role",
+				widget = wibox.widget.textbox,
+			},
+			left = 5,
+			right = 5,
+			widget = wibox.container.margin,
+		},
+	})
 	-- systray settings
 	local systray = wibox.widget.systray()
 	-- systray:set_base_size(20)
@@ -372,15 +375,41 @@ awful.screen.connect_for_each_screen(function(s)
 		layout = wibox.layout.align.horizontal,
 		{
 			-- Left widgets
-			layout = wibox.layout.fixed.horizontal,
-			-- mylauncher,
-			s.mytaglist,
-			s.mypromptbox,
+			{
+				s.mytaglist,
+				-- mylauncher,
+				spacing = 10,
+				{
+					{
+						text = "│",
+						widget = wibox.widget.textbox,
+					},
+					fg = "#939ab7",
+					layout = wibox.container.background,
+				},
+				layout = wibox.layout.fixed.horizontal,
+			},
+			left = 10,
+			layout = wibox.container.margin,
 		},
 		{
-			s.mytasklist, -- Middle widget
-			-- center widget
-			layout = wibox.container.place,
+			{
+				s.mytasklist, -- Middle widget
+				left = 7,
+				right = 10,
+				layout = wibox.container.margin,
+			},
+			{
+				{
+					mytagtitle,
+					layout = wibox.container.place,
+				},
+				left = 10,
+				right = 10,
+				layout = wibox.container.margin,
+			},
+			spacing = 10,
+			layout = wibox.layout.align.horizontal,
 		},
 		{
 			-- Right widgets
