@@ -204,12 +204,66 @@ local partialRoundedRect = function(cr, width, height)
 	gears.shape.partially_rounded_rect(cr, width, height, false, true, true, false, 10)
 end
 
+-- border decoration
+local function border(wdgt, position, enabled)
+	local role = nil
+	if enabled then
+		role = "background_role"
+	end
+
+	if position == "bottom" then
+		return {
+			{
+				{
+					wdgt,
+					layout = wibox.container.place,
+				},
+				top = 2,
+				bottom = 2,
+				layout = wibox.container.margin,
+			},
+			{
+				{
+					top = 2,
+					widget = wibox.container.margin,
+				},
+				id = role,
+				widget = wibox.container.background,
+			},
+			spacing = 2,
+			layout = wibox.layout.align.vertical,
+		}
+	else
+		return {
+			{
+				{
+					top = 2,
+					widget = wibox.container.margin,
+				},
+				id = role,
+				widget = wibox.container.background,
+			},
+			{
+				{
+					wdgt,
+					layout = wibox.container.place,
+				},
+				top = 2,
+				bottom = 2,
+				layout = wibox.container.margin,
+			},
+			spacing = 2,
+			layout = wibox.layout.align.vertical,
+		}
+	end
+end
+
 awful.screen.connect_for_each_screen(function(s)
 	-- Wallpaper
 	set_wallpaper(s)
 
 	-- Each screen has its own tag table.
-	local names = { "main", "www", "floating", "other" }
+	local names = { "main", "udenar", "floating", "other" }
 	local l = awful.layout.suit -- Just to save some typing: use an alias.
 	local layouts = { l.tile, l.tile, l.floating, l.tile }
 	awful.tag(names, s, layouts)
@@ -253,29 +307,14 @@ awful.screen.connect_for_each_screen(function(s)
 			},
 			layout = wibox.layout.fixed.horizontal,
 		},
-		widget_template = {
+		widget_template = border(
 			{
-				{
-					{
-						id = "text_role",
-						widget = wibox.widget.textbox,
-					},
-					{
-						{
-							top = 2,
-							widget = wibox.container.margin,
-						},
-						id = "background_role",
-						widget = wibox.container.background,
-					},
-					layout = wibox.layout.fixed.vertical,
-				},
-				-- left = 5,
-				-- right = 5,
-				widget = wibox.container.margin,
+				id = "text_role",
+				widget = wibox.widget.textbox,
 			},
-			layout = wibox.layout.fixed.horizontal,
-		},
+			'top',
+			true
+		),
 		buttons = taglist_buttons,
 	})
 
@@ -290,39 +329,15 @@ awful.screen.connect_for_each_screen(function(s)
 		},
 		-- Notice that there is *NO* wibox.wibox prefix, it is a template,
 		-- not a widget instance.
-		widget_template = {
+		widget_template = border(
 			{
-				{
-					{
-						{
-							{
-								id = "icon_role",
-								forced_height = 16,
-								widget = wibox.widget.imagebox,
-							},
-							layout = wibox.container.place,
-						},
-						top = 2,
-						bottom = 2,
-						layout = wibox.container.margin,
-					},
-					{
-						{
-							top = 2,
-							widget = wibox.container.margin,
-						},
-						id = "background_role",
-						widget = wibox.container.background,
-					},
-					spacing = 2,
-					layout = wibox.layout.align.vertical,
-				},
-				-- left = 5,
-				-- right = 5,
-				widget = wibox.container.margin,
+				id = "icon_role",
+				forced_height = 16,
+				widget = wibox.widget.imagebox,
 			},
-			layout = wibox.layout.fixed.horizontal,
-		},
+			"bottom",
+			true
+		),
 	})
 
 	--title only

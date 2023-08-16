@@ -12,6 +12,9 @@ case $- in
       *) return;;
 esac
 
+# Bat theme
+BAT_THEME="Catppuccin-macchiato"
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -134,3 +137,5 @@ export JAVA_HOME=/usr/lib/jvm/java-19-openjdk-amd64
 
 # starship prompt
 eval "$(starship init bash)"
+
+[ -f "/home/viveroz/.ghcup/env" ] && source "/home/viveroz/.ghcup/env" # ghcup-env
