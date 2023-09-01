@@ -48,7 +48,7 @@ if status is-interactive
 		eval (env SHELL=/bin/sh lesspipe)
 	end
 
-	alias ls 'exa -al --color=always --group-directories-first'
+	alias ls 'exa -al --color=always --icons --group-directories-first'
 	#alias dir 'dir --color=auto'
 	#alias vdir 'vdir --color=auto'
 
@@ -64,6 +64,9 @@ if status is-interactive
 	alias cs='xclip -i -selection clipboard'
 	alias vs='xclip -o -selection clipboard'
 	alias emacs='emacsclient -c -a \'emacs\''
+
+	#find directory and cd
+	alias cf='cd $(fd -t d . ~ | fzf --preview=\'tree -L 2 -C {}\' --preview-window=up:40%)'
 
 	#neovide
 	alias nvid='/home/viveroz/Documentos/Programas/neovide/neovide --multigrid'
