@@ -1,10 +1,11 @@
 if status is-interactive
 
-	set -x JAVA_HOME /usr/lib/jvm/java-19-openjdk-amd64
+	set -x JAVA_HOME /usr/lib/jvm/java-18-openjdk-amd64
 	set -x PATH $JAVA_HOME/bin $PATH
 	set -x PATH $HOME/.local/share/bob/nvim-bin $PATH
 	set -x PATH $HOME/.local/bin $PATH
 	set -x PATH $HOME/.config/emacs/bin $PATH
+	set -x PATH $HOME/.bun/bin $PATH
 
 	# Haskell paths
 	set -x PATH /home/viveroz/.ghcup/bin $PATH
@@ -44,11 +45,15 @@ if status is-interactive
 	# Bat theme
 	set -x BAT_THEME "Catppuccin-macchiato"
 
+	# editor
+	set -x EDITOR "nvim"
+
 	if test -x /usr/bin/lesspipe
 		eval (env SHELL=/bin/sh lesspipe)
 	end
 
-	alias ls 'exa -al --color=always --icons --group-directories-first'
+	alias ls 'exa -alh --color=always --icons --group-directories-first'
+	alias lt 'exa --tree --color=always --icons --group-directories-first -L 2'
 	#alias dir 'dir --color=auto'
 	#alias vdir 'vdir --color=auto'
 
@@ -66,10 +71,7 @@ if status is-interactive
 	alias emacs='emacsclient -c -a \'emacs\''
 
 	#find directory and cd
-	alias cf='cd $(fd -t d . ~ | fzf --preview=\'tree -L 2 -C {}\' --preview-window=up:40%)'
-
-	#neovide
-	alias nvid='/home/viveroz/Documentos/Programas/neovide/neovide --multigrid'
+	alias cf='cd $(fd -t d . ~ | fzf --preview=\'exa --tree --color=always --icons --group-directories-first -L 1 -a {}\' --preview-window=up:40%)'
 
 	# dotfiles git alias: https://www.atlassian.com/git/tutorials/dotfiles
 	# git init --bare $HOME/.cfg

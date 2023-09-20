@@ -5,6 +5,10 @@
 PATH="$HOME/.local/share/bob/nvim-bin${PATH:+:${PATH}}"
 PATH="$HOME/.local/bin${PATH:+:${PATH}}"
 PATH="$HOME/.config/emacs/bin${PATH:+:${PATH}}"
+PATH="$HOME/.bun/bin${PATH:+:${PATH}}"
+
+export JAVA_HOME=/usr/lib/jvm/java-18-openjdk-amd64
+PATH="$JAVA_HOME${PATH:+:${PATH}}"
 
 # If not running interactively, don't do anything
 case $- in
@@ -14,6 +18,9 @@ esac
 
 # Bat theme
 BAT_THEME="Catppuccin-macchiato"
+
+#pipx completion
+eval "$(register-python-argcomplete pipx)"
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -133,9 +140,12 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 . "$HOME/.cargo/env"
 
-export JAVA_HOME=/usr/lib/jvm/java-19-openjdk-amd64
 
 # starship prompt
 eval "$(starship init bash)"
 
 [ -f "/home/viveroz/.ghcup/env" ] && source "/home/viveroz/.ghcup/env" # ghcup-env
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH=$BUN_INSTALL/bin:$PATH
